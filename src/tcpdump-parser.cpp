@@ -15,6 +15,7 @@
 #include "log_util.h"
 #include "utility.h"
 #include "linklevel_parser.h"
+#include "ip_parser.h"
 
 namespace tcpdump_parser_ns {
 
@@ -88,7 +89,7 @@ public:
      * @return 0 if success, < 0 otherwise
      */
     int parse() {
-        BaseParser *parser = NULL;
+        BaseParser *parser = &IpParser::instance();
         if (wt_ll_) {
             parser = &LinkLevelParser::instance();
         }

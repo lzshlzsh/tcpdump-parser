@@ -12,8 +12,11 @@
 
 #include <ctype.h>
 #include <stdio.h>
+#include <arpa/inet.h>
 
 #include <string>
+
+#include "common_const.h"
 
 namespace tcpdump_parser_ns {
 /**
@@ -92,6 +95,40 @@ public:
                 }
             }
             printf(" %s\n", buf);
+        }
+    }
+    /**
+     * @brief 
+     * @param[in] context
+     */
+    static void dump_mac_addr(const std::string &context) {
+        if (context.length() < MAC_LEN) {
+            return;
+        }
+        for (size_t i = 0; i < MAC_LEN; i++) {
+            if (!i) {
+                printf("%02x", static_cast<unsigned int>(
+                        static_cast<unsigned char>(context[i])));
+            } else {
+                printf(":%02x", static_cast<unsigned int>(
+                        static_cast<unsigned char>(context[i])));
+            }
+        }
+    }
+    /**
+     * @brief 
+     * @param[in] context
+     */
+    static void dump_ip4(const std::string &context) {
+        struct in_addr src;
+        char buf[INET_ADDRSTRLEN];
+
+        if (context.length() < IP4_LEN) {
+            return;
+        }
+        src.s_addr = *reinterpret_cast<const uint32_t *>(&context[0]); 
+        if (inet_ntop(AF_INET, &src, buf, INET_ADDRSTRLEN)) {
+            printf("%s", buf);
         }
     }
 protected:
